@@ -1,0 +1,102 @@
+1. JDBC Stands for Java Database Connectivity
+2. JDBC is the bridge between the Java Application and Database (it is local, cloud or remote database).
+
+
+// if you follow this below steps then you can successfully create a JDBC Application.
+
+3. Steps involved in developing JDBC Application
+    --> import the required package (Also Download & Add Database specific jar into the project).
+    e.g., if we work of sql so download the sql jar
+4. Load and Register the Driver
+5. Establish the connection
+6. create the statement
+7. Execute the CRUD Queries
+8. Process the Result
+9. Close the connection
+
+
+// JDBC Practical
+	4. Load and Register the Driver
+		Class.forName("ClassName"); ClassName is "com.mysql.cj.jdbc.Driver".
+		// You must throw or catch these exceptions because Class.forName() and DriverManager.getConnection() are declared with checked exceptions in the Java API. The compiler will refuse to compile your code if you ignore them.
+		
+		-> must throws the ClassNotFoundException -- Java tried to load a class by its name (as a String), but could not find it on the classpath.
+		
+	5. Establish the Connection:
+		Invoking the getConnection request form the Driver Class.
+		
+		--> must Throws the SQLException -- Something went wrong while Java was trying to communicate with the database.
+		e.g., DriverManager.getConnection(url, user, password);
+		
+	6. Statement Object in JDBC.
+		A Statement object is created because you need a "messenger" to send your SQL queries from Java to the Database.
+	
+		--> After a connection you must set the statement that only way to run SQL Directly.
+		--> Connection only open the door to the database. Connection has no method to run a SQL Quearies.
+		
+
+
+// forName class is mainly used to load a class. you can check a LunchClassForName.java to take a reference.
+
+e.g., Class.forName("com.jdbc.leraning.Demo").newInstance();
+here when we call the newInstance so its also execute the Instance methods too, without it it just load a static blocks.
+
+--> InstantiationException : Java found the class but could not create an object from it.
+	Real Example : It's like trying to build a house from a blueprint that is incomplete.
+				   The blueprint (class) exists, but you cannot construct it.
+
+--> IllegalAccessException : Java found the class and can create an object, but you don't have permission to access its constructor.
+	Real Example : It's like trying to enter a room that is locked.
+				   The room (class) exists and is complete, but you don't have the key (access permission).
+				   
+
+
+// CRUD Opeartion :
+	1. executeUpdate : returns a Int the number of rows affected...
+
+// Insert Data into Table :
+   		// execute query
+		// Insert data into Database
+		String sql = "Insert Into studentInfo(id, sname, sage, scity) VALUES(2, 'Tisha', 23, 'Roxboury')";
+		int rowAffected = st.executeUpdate(sql);
+		
+		if(rowAffected == 0) {
+			System.out.println("Inseration is not executed!");
+		}else {
+			System.out.println("Inseration done successfully!");
+		}
+		
+		
+// Update the Data :
+		String sql = "UPDATE studentinfo set sage = 23 where id = 1";
+		int rowAffected = st.executeUpdate(sql);
+		
+		if(rowAffected == 0) {
+			System.out.println("Data is not updated yet!");
+		}else
+		{
+			System.out.println("Data is Successfully Updated!");
+		}
+		
+		
+// Retrieving the Records from Database :
+		String sql = "SELECT * FROM studentinfo";
+		ResultSet rs = st.executeQuery(sql);
+		
+		while(rs.next()) {
+			// first way using column index:
+			System.out.println(rs.getInt(1)+ " " + rs.getString(2) + " " + rs.getInt(3) + " " + rs.getString(4));
+			
+			// second way using the column name:
+			System.out.println(rs.getInt("id") + " " + rs.getString("sname") + " " + rs.getInt("sage") + rs.getString("scity"));
+		}
+		
+		rs.close();
+		--> ResultSet is a cursor that holds the data returned by SELECT query, and you use rs.next() to move row by row and rs.getXxx("columnName") to retrieve each column's value.
+		
+		
+// 
+
+
+
+		
