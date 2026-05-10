@@ -95,8 +95,127 @@ here when we call the newInstance so its also execute the Instance methods too, 
 		--> ResultSet is a cursor that holds the data returned by SELECT query, and you use rs.next() to move row by row and rs.getXxx("columnName") to retrieve each column's value.
 		
 		
-// 
-
-
-
 		
+// Universal CRUD 
+
+		boolean status = st.execute(sql);
+
+		if(status) {
+		    // ✅ true = SELECT — get the ResultSet
+		    ResultSet rs = st.getResultSet();
+		    while(rs.next()) {
+		        System.out.println(rs.getInt(1) + " " + rs.getString(2));
+		    }
+		} else {
+		    // ✅ false = INSERT/UPDATE/DELETE — get rows affected
+		    int rowsAffected = st.getUpdateCount();
+		}
+		
+		1. What is st.execute()?
+		   execute() is a universal method that can run ANY SQL query — SELECT, INSERT, UPDATE, DELETE.
+		--> st.execute() is useful when you don't know in advance what type of SQL will run — it handles everything with a simple true/false check.
+
+
+
+🔑 One Line Summaries
+
+	Class.forName() = Load driver by name
+	Connection = Open door to DB
+	Statement = Send SQL to DB
+	ResultSet = Hold SELECT results
+	execute() = Universal SQL runner
+	finally = Always closes resources
+	JDBCUtil = Reusable DB helper class
+	
+
+Prepared Statement
+	--> Use PreparedStatement always when your SQL has dynamic values coming from user input — it is safer, cleaner, and faster than Statement.
+		
+		
+Statement V/S PrepareStatement :
+    --> Use Statement for fixed SQL with no user input. Use PreparedStatement always when values come from the user.
+    
+    
+🔑 Golden Rules
+
+Always put WHERE condition ? last in UPDATE
+Always use executeUpdate() for INSERT, UPDATE, DELETE
+executeUpdate() returns rows affected — check it!
+Always close PreparedStatement in finally block
+
+	// Insert
+	String sql = "INSERT INTO studentinfo(id, sname, sage, scity) VALUES(?,?,?,?)";
+	pst = connect.prepareStatement(sql);
+	
+	pst.setInt(1, 101);
+	pst.setString(2, "John");
+	pst.setInt(3, 22);
+	pst.setString(4, "Boston");
+	
+	int rowAffected = pst.executeUpdate();
+	System.out.println("Inserted: " + rowAffected + " row");
+	
+	
+	
+	// Update
+	String sql = "UPDATE studentinfo SET sname=?, sage=?, scity=? WHERE id=?";
+	pst = connect.prepareStatement(sql);
+	
+	pst.setString(1, "Tisha");
+	pst.setInt(2, 25);
+	pst.setString(3, "NewYork");
+	pst.setInt(4, 101);        // ← WHERE condition always LAST
+	
+	int rowAffected = pst.executeUpdate();
+	System.out.println("Updated: " + rowAffected + " row");	
+	
+	
+	
+	// Delete
+	String sql = "DELETE FROM studentinfo WHERE id=?";
+	pst = connect.prepareStatement(sql);
+	
+	pst.setInt(1, 101);        // ← just the WHERE value
+	
+	int rowAffected = pst.executeUpdate();
+	System.out.println("Deleted: " + rowAffected + " row");
+
+
+
+
+🔑 Key Rules
+
+Use executeQuery() for SELECT — never executeUpdate()
+rs.next() returns false if no data found
+Use while(rs.next()) for multiple rows
+Use if(rs.next()) for single row
+Always close ResultSet in finally block
+
+Basic Retrieve — All Data
+	String sql = "SELECT * FROM studentinfo";
+	pst = connect.prepareStatement(sql);
+	
+	ResultSet rs = pst.executeQuery(); // ← no ? so no setXxx needed
+	
+	while(rs.next()) {
+	    System.out.println(rs.getInt("id") + " " + rs.getString("sname") + " " + rs.getInt("sage") + " " + rs.getString("scity"));
+	}
+	
+
+Retrieve — With WHERE Condition
+	String sql = "SELECT * FROM studentinfo WHERE id=?";
+	pst = connect.prepareStatement(sql);
+	
+	pst.setInt(1, 101); // ← set the WHERE value
+	
+	ResultSet rs = pst.executeQuery();
+	
+	if(rs.next()) {
+	    System.out.println(rs.getInt("id") + " " + rs.getString("sname") + " " + rs.getInt("sage") + " " + rs.getString("scity"));
+	} else {
+	    System.out.println("No record found!");
+	}
+	
+
+
+
