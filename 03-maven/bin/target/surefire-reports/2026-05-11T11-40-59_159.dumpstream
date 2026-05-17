@@ -1,0 +1,5 @@
+# Created at 2026-05-11T11:40:59.556
+Boot Manifest-JAR contains absolute paths in classpath 'U:\java-to-quarkus-roadmap\03-maven\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+
